@@ -6,12 +6,18 @@ import { Spacing } from '../spacing';
 import { Select } from '../select';
 import {
 	ArticleStateType,
+	backgroundColors,
+	contentWidthArr,
 	defaultArticleState,
+	fontColors,
 	fontFamilyOptions,
+	fontSizeOptions,
 } from '../../constants/articleProps';
 import clsx from 'clsx';
 
 import styles from './ArticleParamsForm.module.scss';
+import { RadioGroup } from '../radio-group';
+import { Separator } from '../separator';
 
 interface ArticleParamsFormProps {
 	setArticleState: (
@@ -40,6 +46,14 @@ export const ArticleParamsForm = ({
 	const [fontFamily, setFontFamily] = useState(
 		defaultArticleState.fontFamilyOption
 	);
+	const [fontSize, setFontSize] = useState(defaultArticleState.fontSizeOption);
+	const [fontColor, setFontColor] = useState(defaultArticleState.fontColor);
+	const [backgroundColor, setBackgroundColor] = useState(
+		defaultArticleState.backgroundColor
+	);
+	const [contentWidth, setContentWidth] = useState(
+		defaultArticleState.contentWidth
+	);
 
 	function openFormHandle() {
 		setOpen((prevValue) => !prevValue);
@@ -47,11 +61,27 @@ export const ArticleParamsForm = ({
 
 	function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		setArticleState((prev) => {
-			return {
-				...prev,
-				fontFamilyOption: fontFamily,
-			};
+		setArticleState( {
+			fontFamilyOption: fontFamily,
+			fontSizeOption: fontSize,
+			fontColor: fontColor,
+			backgroundColor: backgroundColor,
+			contentWidth: contentWidth,
+		});
+	}
+
+	function onReset() {
+		setFontFamily(defaultArticleState.fontFamilyOption);
+		setFontSize(defaultArticleState.fontSizeOption);
+		setFontColor(defaultArticleState.fontColor);
+		setBackgroundColor(defaultArticleState.backgroundColor);
+		setContentWidth(defaultArticleState.contentWidth);
+		setArticleState({
+			fontFamilyOption: defaultArticleState.fontFamilyOption,
+			fontSizeOption: defaultArticleState.fontSizeOption,
+			fontColor: defaultArticleState.fontColor,
+			backgroundColor: defaultArticleState.backgroundColor,
+			contentWidth: defaultArticleState.contentWidth,
 		});
 	}
 
@@ -62,7 +92,7 @@ export const ArticleParamsForm = ({
 				className={clsx(styles.container, {
 					[styles.container_open]: open,
 				})}>
-				<form className={styles.form} onSubmit={onSubmit}>
+				<form className={styles.form} onSubmit={onSubmit} onReset={onReset}>
 					<Text as={'p'} size={31} uppercase={true} weight={800}>
 						Задайте параметры
 					</Text>
@@ -72,6 +102,37 @@ export const ArticleParamsForm = ({
 						onChange={setFontFamily}
 						options={fontFamilyOptions}
 						title='Шрифты'
+					/>
+					<Spacing size={50} />
+					<RadioGroup
+						name={'radio'}
+						options={fontSizeOptions}
+						selected={fontSize}
+						onChange={setFontSize}
+						title={'Размер шрифта'}
+					/>
+					<Spacing size={50} />
+					<Select
+						selected={fontColor}
+						onChange={setFontColor}
+						options={fontColors}
+						title='Цвет шрифта'
+					/>
+					<Spacing size={50} />
+					<Separator />
+					<Spacing size={50} />
+					<Select
+						selected={backgroundColor}
+						onChange={setBackgroundColor}
+						options={backgroundColors}
+						title='Цвет фона'
+					/>
+					<Spacing size={50} />
+					<Select
+						selected={contentWidth}
+						onChange={setContentWidth}
+						options={contentWidthArr}
+						title='Ширина контента'
 					/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' type='reset' />
